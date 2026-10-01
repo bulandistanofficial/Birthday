@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malik Arslan's VIP Birthday Celebration 🎉</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#050508',
+                        cardBg: '#0f0f17',
+                        accentPurple: '#a855f7',
+                        accentPink: '#ec4899',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Outfit & Sacramento -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Sacramento&display=swap" rel="stylesheet">
+    <!-- Three.js for 3D Background Effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- html2canvas for Story Screenshot Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #050508;
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        .font-script {
+            font-family: 'Sacramento', cursive;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .glass-panel {
+            background: rgba(13, 13, 20, 0.88);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        @keyframes float3d {
+            0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+            50% { transform: translateY(-10px) rotateX(2deg) rotateY(-2deg); }
+        }
+        .float-anim {
+            animation: float3d 4s ease-in-out infinite;
+        }
+        @keyframes pulse-neon {
+            0%, 100% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.5), inset 0 0 15px rgba(236, 72, 153, 0.4); }
+            50% { box-shadow: 0 0 50px rgba(168, 85, 247, 0.9), inset 0 0 30px rgba(236, 72, 153, 0.7); }
+        }
+        .neon-glow {
+            animation: pulse-neon 3s infinite;
+        }
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050508;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #272738;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative selection:bg-pink-500 selection:text-white">
+
+    <div id="canvas-container"></div>
+
+    <!-- Main Container adaptable for Mobile & Laptop -->
+    <div id="app" class="w-full max-w-md sm:max-w-lg z-10 transition-all duration-700 mx-auto my-auto">
+        
+        <!-- Welcome Screen with Guest Dropdown Selection -->
+        <div id="welcome-screen" class="glass-panel rounded-3xl p-6 sm:p-10 text-center transform transition-all duration-500">
+            
+            <div class="mb-5 relative inline-block float-anim">
+                <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-purple-500/80 shadow-2xl mx-auto neon-glow bg-slate-900">
+                    <!-- Custom Host Photo -->
+                    <img src="https://i.ibb.co/MxYPPPJb/57374.png" alt="Malik Arslan" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop'">
+                </div>
+                <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[11px] sm:text-xs px-3.5 py-1 rounded-full font-bold shadow-lg tracking-wider whitespace-nowrap">
+                    👑 Malik Arslan VIP
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <a href="https://instagram.com/malikarslanpk89" target="_blank" class="inline-flex items-center space-x-1.5 text-pink-400 hover:text-pink-300 font-semibold text-xs sm:text-sm bg-pink-500/10 px-4 py-1.5 rounded-full border border-pink-500/30 transition shadow-sm">
+                    <span>📷</span>
+                    <span>@malikarslanpk89</span>
+                </a>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold mb-2 tracking-tight bg-gradient-to-r from-white via-slate-200 to-purple-300 bg-clip-text text-transparent">
+                VIP Birthday Invitation ✨
+            </h1>
+            <p class="text-slate-400 text-xs sm:text-sm mb-6 leading-relaxed">
+                Select your name from the exclusive guest list below to claim your personalized VIP access pass!
+            </p>
+
+            <div class="space-y-4">
+                <div class="relative">
+                    <select id="guest-select" class="w-full px-5 py-4 rounded-2xl bg-slate-900/95 border border-slate-700/80 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition shadow-inner font-semibold text-base sm:text-lg appearance-none cursor-pointer">
+                        <option value="" disabled selected>👉 Select your name...</option>
+                        <option value="Saqlain">Saqlain</option>
+                        <option value="Mehtab">Mehtab</option>
+                        <option value="Ali">Ali</option>
+                        <option value="Saad">Saad</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-purple-400 font-bold">
+                        ▼
+                    </div>
+                </div>
+
+                <button onclick="handleSelectGuest()" class="w-full py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 text-white font-bold rounded-2xl shadow-xl hover:opacity-95 transform active:scale-95 transition flex items-center justify-center space-x-2 text-base sm:text-lg">
+                    <span>Open VIP Pass 🎟️</span>
+                </button>
+            </div>
+            
+            <p id="error-msg" class="text-pink-400 text-xs sm:text-sm mt-3 hidden font-medium animate-pulse">⚠️ Please select your name to continue!</p>
+        </div>
+
+        <!-- Invitation Screen (Designed for gorgeous Instagram Story screenshots) -->
+        <div id="invitation-screen" class="glass-panel rounded-3xl p-6 sm:p-8 text-center hidden transform transition-all duration-700 scale-95 opacity-0">
+            
+            <!-- Screenshot Capture Area -->
+            <div id="story-pass" class="p-2 bg-transparent rounded-2xl">
+                <div class="inline-block bg-purple-500/20 border border-purple-500/40 px-4 py-1.5 rounded-full text-purple-300 text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 shadow">
+                    ⭐ Official VIP Access Pass ⭐
+                </div>
+
+                <div class="flex items-center justify-center space-x-3 mb-3">
+                    <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-purple-400 shadow-md">
+                        <img src="https://i.ibb.co/MxYPPPJb/57374.png" alt="Malik Arslan" class="w-full h-full object-cover">
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[11px] text-slate-400 uppercase tracking-wider font-bold">Host</p>
+                        <p class="text-sm font-extrabold text-white">Malik Arslan</p>
+                        <p class="text-xs text-pink-400 font-medium">@malikarslanpk89</p>
+                    </div>
+                </div>
+
+                <h2 id="greeting-title" class="text-2xl sm:text-3xl font-extrabold mb-1 text-slate-100">Welcome!</h2>
+                <p class="font-script text-3xl sm:text-4xl text-pink-400 mb-5 drop-shadow-md">You're invited to my Birthday!</p>
+
+                <!-- Event Details Box -->
+                <div class="bg-slate-950/90 rounded-2xl p-4 sm:p-5 mb-5 border border-slate-800 text-left space-y-3 shadow-inner">
+                    <div class="flex items-center space-x-3.5 text-slate-300">
+                        <span class="text-xl bg-slate-900 p-2.5 rounded-xl border border-slate-800 shadow">📅</span>
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Date</p>
+                            <p class="font-extrabold text-white text-base">7th October</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3.5 text-slate-300">
+                        <span class="text-xl bg-slate-900 p-2.5 rounded-xl border border-slate-800 shadow">📍</span>
+                        <div>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Celebration Venue</p>
+                            <p class="font-extrabold text-purple-400 text-sm">Grand Birthday Party ✨</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Countdown Timer -->
+            <div class="mb-5">
+                <p class="text-xs uppercase tracking-wider text-slate-400 mb-2.5 font-bold">⏳ Countdown to 7th October</p>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="bg-slate-950/95 p-2.5 rounded-2xl border border-slate-800 shadow-inner">
+                        <span id="days" class="block text-xl sm:text-2xl font-extrabold text-purple-400">00</span>
+                        <span class="text-[9px] text-slate-400 uppercase font-bold">Days</span>
+                    </div>
+                    <div class="bg-slate-950/95 p-2.5 rounded-2xl border border-slate-800 shadow-inner">
+                        <span id="hours" class="block text-xl sm:text-2xl font-extrabold text-purple-400">00</span>
+                        <span class="text-[9px] text-slate-400 uppercase font-bold">Hours</span>
+                    </div>
+                    <div class="bg-slate-950/95 p-2.5 rounded-2xl border border-slate-800 shadow-inner">
+                        <span id="mins" class="block text-xl sm:text-2xl font-extrabold text-purple-400">00</span>
+                        <span class="text-[9px] text-slate-400 uppercase font-bold">Mins</span>
+                    </div>
+                    <div class="bg-slate-950/95 p-2.5 rounded-2xl border border-slate-800 shadow-inner">
+                        <span id="secs" class="block text-xl sm:text-2xl font-extrabold text-purple-400">00</span>
+                        <span class="text-[9px] text-slate-400 uppercase font-bold">Secs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <div class="flex space-x-2.5">
+                    <button onclick="handleRSVP('Accept 🎉')" class="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition transform active:scale-95 text-xs sm:text-sm">
+                        Accept 🎉
+                    </button>
+                    <button onclick="handleRSVP('Maybe 🤔')" class="flex-1 py-3 bg-slate-900 border border-slate-700 text-slate-300 font-bold rounded-xl hover:bg-slate-800 transition transform active:scale-95 text-xs sm:text-sm">
+                        Maybe 🤔
+                    </button>
+                </div>
+                
+                <button onclick="downloadStoryPass()" class="w-full py-3.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl shadow-xl hover:opacity-95 transition transform active:scale-95 text-xs sm:text-sm flex items-center justify-center space-x-2">
+                    <span>📸 Take Screenshot for IG Story</span>
+                </button>
+            </div>
+
+            <div id="rsvp-status" class="mt-3 text-sm text-purple-300 font-semibold hidden animate-pulse"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Three.js 3D Background Floating Particles
+        let scene, camera, renderer, particles;
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 400;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const particleCount = 140;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 900;
+                positions[i + 1] = (Math.random() - 0.5) * 900;
+                positions[i + 2] = (Math.random() - 0.5) * 600;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0xc084fc,
+                size: 4.5,
+                transparent: true,
+                opacity: 0.85
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            particles.rotation.y += 0.0012;
+            particles.rotation.x += 0.0006;
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            initThree();
+            animateThree();
+            startCountdown();
+        };
+
+        // Handle Guest Selection
+        function handleSelectGuest() {
+            const guestSelect = document.getElementById('guest-select');
+            const errorMsg = document.getElementById('error-msg');
+            const selectedGuest = guestSelect.value;
+
+            if (!selectedGuest) {
+                errorMsg.classList.remove('hidden');
+                guestSelect.classList.add('border-pink-500');
+                return;
+            }
+
+            errorMsg.classList.add('hidden');
+            document.getElementById('greeting-title').innerText = `${selectedGuest}'s VIP Pass ✨`;
+
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const invitationScreen = document.getElementById('invitation-screen');
+
+            welcomeScreen.style.opacity = '0';
+            welcomeScreen.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                invitationScreen.classList.remove('hidden');
+                setTimeout(() => {
+                    invitationScreen.style.opacity = '1';
+                    invitationScreen.style.transform = 'scale(1)';
+                }, 50);
+
+                // Confetti blast on entry
+                confetti({
+                    particleCount: 180,
+                    spread: 100,
+                    origin: { y: 0.5 }
+                });
+            }, 400);
+        }
+
+        function handleRSVP(response) {
+            const statusDiv = document.getElementById('rsvp-status');
+            statusDiv.innerText = `Response Saved: ${response} 🥳`;
+            statusDiv.classList.remove('hidden');
+
+            confetti({
+                particleCount: 90,
+                spread: 70,
+                origin: { y: 0.8 }
+            });
+        }
+
+        // Function to take screenshot for Instagram Story
+        function downloadStoryPass() {
+            const passElement = document.getElementById('story-pass');
+            html2canvas(passElement, {
+                backgroundColor: '#0d0d14',
+                scale: 2,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'malik-arslan-vip-pass.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+
+            confetti({
+                particleCount: 120,
+                spread: 90,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Live Countdown Timer to October 7th
+        function startCountdown() {
+            const now = new Date();
+            let year = now.getFullYear();
+            let targetDate = new Date(year, 9, 7, 0, 0, 0); // Month 9 is October
+
+            if (now > targetDate) {
+                targetDate = new Date(year + 1, 9, 7, 0, 0, 0);
+            }
+
+            setInterval(() => {
+                const currentTime = new Date().getTime();
+                const distance = targetDate - currentTime;
+
+                if (distance < 0) {
+                    document.getElementById('days').innerText = '00';
+                    document.getElementById('hours').innerText = '00';
+                    document.getElementById('mins').innerText = '00';
+                    document.getElementById('secs').innerText = '00';
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('mins').innerText = String(mins).padStart(2, '0');
+                document.getElementById('secs').innerText = String(secs).padStart(2, '0');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
